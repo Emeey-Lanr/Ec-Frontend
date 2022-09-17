@@ -1,0 +1,81 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    padding: 20px;
+    width: 70%;
+    margin: auto;
+    border-bottom: 1px solid #0cdf1e6e;
+    color: #0cdf1e;
+    margin-bottom: 10px;
+
+}
+
+
+
+
+
+
+/* =========Add Task============ */
+.addtask {
+    width: 50%;
+    margin: auto;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.addtask button {
+    border: none;
+    background: none;
+    color: #0c56df;
+
+}
+
+.addtask button span {
+    background-color: #0c56df;
+    color: white;
+    padding-top: 1px;
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 20px;
+}
+
+.inputchat {
+    display: flex;
+    justify-content: center;
+
+}
+
+.inputchat input {
+    border: 1px solid #0cdf1e;
+    height: 37px;
+    width: 40%;
+    border-radius: 5px;
+}
+
+.inputchat input:focus {
+    outline: 2px solid #0cdf1e6e;
+}
+
+.inputchat button {
+    border: none;
+    background-color: #0cdf1e;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.chat {
+    width: 50%;
+    padding: 10px 0;
+    background-color: #0cdf1e6e;
+    color: white;
+    margin: auto;
+    margin: 20px auto;
+}
