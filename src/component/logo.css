@@ -1,0 +1,28 @@
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border: 1px solid #acd4f7;
+    border-top: none;
+    border-right: none;
+    transform: rotate(40deg);
+}
+
+.second-next-logo {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #acd4f7;
+    border-left: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.second-next-logo div {
+    width: 5px;
+    height: 5px;
+    background-color: white;
+}

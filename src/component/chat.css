@@ -1,0 +1,289 @@
+.chat-nav {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    background: url(../images/2112.w039.n003.58B.p1.58.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.chat-dark {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.438);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat {
+    width: 90%;
+    height: 90%;
+    position: fixed;
+    left: 50;
+    right: 50;
+    background: linear-gradient(to top, #f4f5f7, #fbfbfb, #fafafa);
+
+}
+
+.chat-logo {
+    padding: 10px;
+    margin: 10px 0 10px 0 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.chat-icon {
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    box-shadow: 1px 2px 3px #fafafa;
+    padding: 5px 0;
+    align-items: center;
+    border: 1px solid #acd4f73f;
+
+
+
+}
+
+.chat-icon span {
+    color: #acd4f7;
+    font-size: 1.4rem;
+}
+
+.chat-icon button {
+    border: none;
+    background: none;
+    font-size: 1.4rem;
+    color: #acd4f7;
+    margin: 0 20px;
+}
+
+.user-img {
+    display: flex;
+    align-items: flex-end;
+}
+
+
+.user-img p {
+    color: #acd4f7;
+
+}
+
+.chat-div {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 40% 50%;
+    position: fixed;
+    height: 74%;
+}
+
+
+.user {
+    background: white;
+
+    overflow-y: scroll;
+
+}
+
+.user::-webkit-scrollbar-button {
+    width: 5px;
+    background-color: red;
+}
+
+.user::-webkit-scrollbar-track {
+    width: 5px;
+}
+
+.user::-webkit-scrollbar-thumb {
+    width: 5px;
+    background-color: red;
+}
+
+.user::-webkit-scrollbar-track-piece {
+    width: 5px;
+    background-color: red;
+}
+
+.user-search {
+    background: #acd4f7;
+}
+
+
+.user-search input {
+    width: 80%;
+    height: 30px;
+    border: 1px solid #acd4f73f;
+
+
+
+}
+
+.user-search input:focus {
+    outline: none;
+}
+
+.contact-space {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 3px;
+    background-color: white;
+    box-shadow: 1px 2px 5px #f4f5f7;
+    border-radius: 10px;
+
+}
+
+
+.contact-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    border: 3px solid #acd4f7;
+    position: relative;
+
+}
+
+.contact-img img {
+    border-radius: 40px;
+}
+
+.number-message {
+    width: 20px;
+    height: 20px;
+    background-color: rgb(4, 245, 4);
+    position: absolute;
+    left: 60%;
+    bottom: -10px;
+    text-align: center;
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.number-message p {
+    font-size: 0.7rem;
+}
+
+.contact div p {
+    color: #00000086;
+}
+
+.contact-img img {
+    width: 100%;
+    object-fit: cover;
+
+}
+
+.contact-name {
+    margin: 0 0 0 auto;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.username {
+    padding-left: 10px;
+}
+
+.username h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222222a4;
+}
+
+.username p {
+    width: 70%;
+    height: 20px;
+    overflow: hidden;
+    color: #494949ad;
+    font-size: 0.9rem;
+
+}
+
+.send-chat {
+    position: fixed;
+    width: 100%;
+    bottom: 5.6%;
+    display: flex;
+    align-items: center;
+}
+
+.send-chat textarea {
+    resize: none;
+    width: 40%;
+    height: 40px;
+    border: 1px solid #acd4f7;
+    border-radius: 30px;
+    text-align: left;
+    padding-left: 10px;
+    overflow: hidden;
+}
+
+.send-chat textarea:focus {
+    outline: 2px solid #acd4f7ad;
+}
+
+.send-chat button {
+    border: none;
+    background-color: #acd4f7;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+
+    color: white;
+}
+
+.chat-a {
+
+    width: 60%;
+    border-radius: 60px;
+    padding: 10px 5px;
+    color: white;
+    margin: 0 0 0 auto;
+
+}
+
+.chat-a div {
+    background-color: #acd4f7;
+    border-radius: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.text {
+    text-align: left;
+}
+
+.date {
+    text-align: right;
+}
+
+
+.chat-b {
+    overflow: unset;
+    position: unset;
+    width: 60%;
+    margin: 0 auto 0 0;
+    color: #acd4f7;
+    text-align: left;
+    border-radius: 60px;
+    padding: 10px 20px;
+}
+
+.chat-b p {
+    padding: 5px 10px;
+    background-color: white;
+    border-radius: 20px;
+    margin: 20px 0;
+}
