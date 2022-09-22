@@ -12,8 +12,16 @@ const Register = () => {
     const [otp, setOTP] = useState(String(one) + String(two) + String(three) + String(four))
     const signupEndpoint = `http://localhost:5001/user/signup`
     ///form validation
+    const [emailValidation, setemailValidation] = useState(false)
+    const [duplicateEmail, setduplicateEmail] = useState(false)
+    const [userNameValidation, setuserNameValidation] = useState(false)
+    const [passwordValidation, setpasswordValidation] = useState(false)
+    const [duplicateUserName, setduplicateUserName] = useState(false)
+    const [emailUsernameMessage, setemailUsernameMessage] = useState('')
+
     const [ifValid, setIfValid] = useState()
-    const passreqg = /^[\w]{6,}$/
+    const passwordRegex = /^[\w]{6,20}$/
+    const emailRegex = /^([\w]+)\@([\w]{5,9})\.([\w]{3,})$/
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -22,14 +30,23 @@ const Register = () => {
         },
         onSubmit(values) {
             console.log(values)
-            setwhenClicked(true)
+
         },
-        validateOnBlur(values) {
-            if (values.email === '' || values.username === '' === values.password === "") {
-
+        validate(values) {
+            if (!emailRegex.test(values.email)) {
+                setemailValidation(true)
+            } else {
+                setemailValidation(false)
             }
-            if (!passreqg.test(values.password)) {
-
+            if (!passwordRegex.test(values.password)) {
+                setpasswordValidation(true)
+            } else {
+                setpasswordValidation(false)
+            }
+            if (values.username === '') {
+                setuserNameValidation(true)
+            } else {
+                setuserNameValidation(false)
             }
         }
 
@@ -47,11 +64,30 @@ const Register = () => {
         three: three,
         four: four
     }
+
+    const otpendpoint = 'http://localhost:5001/user/message'
     const login = () => {
+        console.log(formik.values)
+        if (emailRegex.test(formik.values.email) && passwordRegex.test(formik.values.password) && formik.values.username !== '') {
+            setwhenClicked(true)
+            axios.post(signupEndpoint, { userSchema: userSchema, otpSchema: otpSchema }).then((result) => {
+                if (result.data.status) {
+                    axios.post(otpendpoint, { otp: true }).then((result) => {
+                        console.log(result)
+                    })
+                } else {
+                    if (result.data.duplicateEmail) {
+                        setduplicateEmail(true)
+                        setemailUsernameMessage(result.data.message)
+                    } else if (result.data.duplicateUserName) {
+                        setduplicateUserName(true)
+                        setemailUsernameMessage(result.data.message)
+                    }
+                }
 
-        axios.post(signupEndpoint, { userSchema: userSchema, otpSchema: otpSchema }).then((result) => {
+            })
+        }
 
-        })
 
     }
 
@@ -63,13 +99,17 @@ const Register = () => {
                         <div className="login-input" style={{ marginBottom: "20px" }}>
                             <Logo />
                         </div>
-
+                        {emailValidation && <p style={{ color: "#ff4141", fontSize: '0.9rem', textAlign: "left", fontWeight: "600" }}>Invalid Email</p>}
+                        {duplicateEmail && <p style={{ color: "#ff4141", fontSize: '0.9rem', textAlign: "left" }}>{emailUsernameMessage}</p>}
                         <div className="login-input" style={{ marginBottom: "10px" }} >
                             <input type="text" placeholder="Enter your Email" onChange={formik.handleChange} name="email" onBlur={formik.handleBlur} />
                         </div>
+                        {userNameValidation && <p style={{ color: "#ff4141", fontSize: '0.9rem', textAlign: "left", fontWeight: "600" }}>This field is required</p>}
+                        {duplicateUserName && <p style={{ color: "#ff4141", fontSize: '0.9rem', textAlign: "left", fontWeight: "600" }}>{emailUsernameMessage}</p>}
                         <div className="login-input" style={{ marginBottom: '10px' }}>
                             <input type="text" placeholder="Enter a username" onChange={formik.handleChange} name="username" />
                         </div>
+                        {passwordValidation && <p style={{ color: "#ff4141", fontSize: '0.9rem', textAlign: "left", fontWeight: "600" }}>Password must be aleast 6 characters</p>}
                         <div className="login-input" style={{ marginBottom: '10px' }}>
                             <input type="text" placeholder="Enter your password" onChange={formik.handleChange} name="password" onBlur={formik.handleBlur} />
                         </div>

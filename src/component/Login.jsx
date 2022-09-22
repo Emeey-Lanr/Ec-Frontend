@@ -6,25 +6,52 @@ import { useNavigate } from "react-router-dom"
 import Logo from "../component/Logo"
 const Login = ({ socket }) => {
     const [onclick, setonClick] = useState(false)
-    const [nodemailer, setnodemailer] = useState(false)
     const [ifvalid, setifvalid] = useState(true)
-    const [proceedto, setproceed] = useState(false)
-    const [email, setEmail] = useState('')
+    const [response, setresponse] = useState(false)
+    const [message, setMessage] = useState('')
+
     const [username, setusername] = useState('')
+    const [password, setPassword] = useState('')
+    const [one, setOne] = useState(Math.trunc(Math.random() * 9))
+    const [two, setTwo] = useState(Math.trunc(Math.random() * 9))
+    const [three, setThree] = useState(Math.trunc(Math.random() * 9))
+    const [four, setFour] = useState(Math.trunc(Math.random() * 9))
     const check = /^[\d]{11,14}$/
-    const emailValidationEndpoint = `http://localhost:5001/user/emailVerification`
+    const signinEndpoint = `http://localhost:5001/user/login`
     let navigate = useNavigate()
+    let userSchema = {
+        username: username,
+        password: password
+    }
+    let otpSchema = {
+        one: one,
+        two: two,
+        three: three,
+        four: four
+    }
+    const otpendpoint = 'http://localhost:5001/user/message'
     const proceed = () => {
         setonClick(true)
-        axios.post(emailValidationEndpoint, { OTP: `EC` + Math.trunc(Math.random() * 1000) + '1', email: email }).then((result) => {
-            console.log(result)
-            if (result.data.status) {
-
-                navigate('/otpverification')
+        axios.post(signinEndpoint, { userSchema: userSchema, otpSchema: otpSchema }).then((result) => {
+            if (result.data.status === false) {
+                setMessage(result.data.message)
+                setresponse(true)
             } else {
-                setonClick(false)
-                setifvalid(true)
+                if (result.data.tokenverification) {
+                    setresponse(false)
+                    localStorage.echatUserToken = result.data.token
+                    navigate('/chat')
+                } else {
+                    axios.get(otpendpoint).then((result) => {
+                        if (result.data.status) {
+                            navigate('/otpverification')
+                        } else {
+
+                        }
+                    })
+                }
             }
+
         })
     }
     const join = () => {
@@ -38,20 +65,27 @@ const Login = ({ socket }) => {
                             <div style={{ display: "flex", justifyContent: 'center' }}>
                                 <Logo />
                             </div>
-                            <p style={{ textAlign: 'left' }}>Enter Your Email</p>
+
+                            <p style={{ textAlign: 'left' }}>Enter Your Username</p>
                             <div className="login-input" >
-                                <input type="text" disabled={onclick} onChange={(e) => setEmail(e.target.value)} />
+                                <input type="text" disabled={onclick} onChange={(e) => setusername(e.target.value)} />
 
                             </div>
                             <p style={{ textAlign: 'left' }}>Enter Password</p>
                             <div className="login-input " style={{ marginBottom: '10px' }} >
-                                <input type="text" style={{ borderRadius: 'none' }} disabled={onclick} onChange={(e) => setEmail(e.target.value)} />
+                                <input type="text" style={{ borderRadius: 'none' }} disabled={onclick} onChange={(e) => setPassword(e.target.value)} />
 
                             </div>
+                            {response && <div style={{ background: "#fd5454e1", padding: "5px 0" }}>
+                                <p style={{ color: 'white', textAlign: "center", fontWeight: "0.9rem" }}>{message}</p>
+                            </div>}
                         </div>
+
                         <div className="login-btn">
-                            <button disabled={onclick} onClick={() => proceed()}>Login</button>{onclick && <span className="spin"><FaSpinner className="spin" /></span>}
+                            <button disabled={onclick} onClick={() => proceed()}>Login{onclick && <FaSpinner className="spin" />}</button>
                         </div>
+
+
 
                     </div>
                 </div>

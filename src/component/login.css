@@ -52,6 +52,7 @@
     margin: auto;
     border-radius: 5px 0 5px 5px;
 
+
 }
 
 .login-form input:focus {
@@ -78,6 +79,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
 
 }
 
