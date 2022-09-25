@@ -3,6 +3,7 @@ import Logo from "./Logo"
 import { FaTimes, FaSpinner } from "react-icons/fa"
 import axios from "axios"
 import { useFormik } from "formik"
+import { useNavigate } from "react-router-dom"
 const Register = () => {
     const [whenClicked, setwhenClicked] = useState(false)
     const [one, setOne] = useState(Math.trunc(Math.random() * 9))
@@ -55,8 +56,11 @@ const Register = () => {
         Email: formik.values.email,
         userName: formik.values.username,
         password: formik.values.password,
+        imgURL: "",
+        aboutMe: "",
+        ecIdentifier: "EC_Certified_User",
         tokenValidation: false,
-        friendList: [],
+        friendList: []
     }
     let otpSchema = {
         one: one,
@@ -64,7 +68,7 @@ const Register = () => {
         three: three,
         four: four
     }
-
+    let navigate = useNavigate()
     const otpendpoint = 'http://localhost:5001/user/message'
     const login = () => {
         console.log(formik.values)
@@ -72,8 +76,15 @@ const Register = () => {
             setwhenClicked(true)
             axios.post(signupEndpoint, { userSchema: userSchema, otpSchema: otpSchema }).then((result) => {
                 if (result.data.status) {
-                    axios.post(otpendpoint, { otp: true }).then((result) => {
+                    localStorage.echatUserToken = result.data.token
+                    axios.get(otpendpoint, { otp: true }).then((result) => {
                         console.log(result)
+                        if (result.data.status) {
+                            navigate("/otpverification")
+
+                        } else {
+                            navigate("/chat")
+                        }
                     })
                 } else {
                     if (result.data.duplicateEmail) {

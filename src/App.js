@@ -8,9 +8,9 @@ import Register from "./component/Register"
 const App = () => {
   const socketenpoint = "http://localhost:5001/"
   let socket = useRef()
-  // useEffect(() => {
-  //   socket.current = Socket(socketenpoint)
-  // }, [])
+  useEffect(() => {
+    socket.current = Socket(socketenpoint)
+  }, [])
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
