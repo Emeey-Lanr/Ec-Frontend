@@ -83,32 +83,14 @@
     height: 74%;
 }
 
-
 .user {
     background: white;
-
+    height: 74vh;
     overflow-y: scroll;
 
 }
 
-.user::-webkit-scrollbar-button {
-    width: 5px;
-    background-color: red;
-}
 
-.user::-webkit-scrollbar-track {
-    width: 5px;
-}
-
-.user::-webkit-scrollbar-thumb {
-    width: 5px;
-    background-color: red;
-}
-
-.user::-webkit-scrollbar-track-piece {
-    width: 5px;
-    background-color: red;
-}
 
 .user-search {
     background: #acd4f7;
@@ -197,6 +179,12 @@
     align-items: flex-end;
 }
 
+.chat-space {
+    height: 65vh;
+    overflow-y: scroll;
+
+}
+
 .username {
     padding-left: 10px;
 }
@@ -251,6 +239,7 @@
     color: white;
 }
 
+
 .chat-a {
 
     width: 60%;
@@ -284,6 +273,8 @@
     justify-content: left;
     padding: 4.3px 0;
     margin-bottom: 5px;
+    position: sticky;
+    top: 0;
 }
 
 .profile-side button {
@@ -395,15 +386,15 @@
     font-weight: 500;
 }
 
-/* Suggesteed friends */
+/* Suggesteed friends
 .suggested-Friends {
 
     width: 100%;
 
-}
+} */
 
 .friendsToBeAdded {
-    width: 100%;
+    /* width: 100%; */
     margin: 5px 10px;
 
 }
@@ -439,6 +430,39 @@
     border-radius: 100%;
 }
 
+/* Notification Space */
+.notification-space {
+    border-bottom: 1px solid #acd4f7;
+    padding-bottom: 5px;
+}
+
+.notification-space h2 {
+    color: #acd4f7;
+    background-color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 500;
+
+
+}
+
+.notification-space p {
+    color: #222222a4;
+
+}
+
+.notification-space .notification-action {
+    display: flex;
+    justify-content: flex-end;
+
+}
+
+.notification-action button {
+    border: none;
+    color: white;
+    background: #acd4f7;
+    padding: 7px 12px;
+
+}
 
 
 
@@ -458,9 +482,30 @@
         grid-template-columns: 50% 50%;
     }
 
+    .user {
+        height: 100vh;
+        overflow-y: scroll;
+    }
+
+    .user-search {
+        position: sticky;
+        top: 0;
+    }
+
+    .friend-suggestion {
+        height: 70vh;
+        overflow-y: scroll;
+
+    }
+
     .send-chat {
         right: 0;
         bottom: 0;
+    }
+
+    .chat-space {
+        height: 75vh;
+        padding-bottom: 10px;
     }
 
     .chat a {
@@ -487,12 +532,13 @@
 @media (max-width:850px) {
     .chat-div {
         grid-template-columns: 100%;
+        overflow-y: scroll;
     }
 
     .user {
         width: 100%;
-        position: fixed;
-        height: 100%;
+        overflow-y: scroll;
+        height: 100vh;
     }
 
     .usernone {
@@ -513,6 +559,8 @@
 
     .chat-space {
         width: 100%;
+        height: 70vh;
+        overflow-y: scroll;
     }
 
     .send-chat {

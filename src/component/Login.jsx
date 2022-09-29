@@ -54,8 +54,7 @@ const Login = ({ socket }) => {
 
         })
     }
-    const join = () => {
-    }
+
     return (
         <>
             {ifvalid && <div className="body-login">
@@ -84,7 +83,6 @@ const Login = ({ socket }) => {
                         <div className="login-btn">
                             <button disabled={onclick} onClick={() => proceed()}>Login{onclick && <FaSpinner className="spin" />}</button>
                         </div>
-
 
 
                     </div>

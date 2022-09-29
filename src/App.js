@@ -6,7 +6,8 @@ import Chat from "./component/Chat"
 import OTP from "./component/OTP"
 import Register from "./component/Register"
 const App = () => {
-  const socketenpoint = "http://localhost:5001/"
+
+  const socketenpoint = "http://localhost:5001"
   let socket = useRef()
   useEffect(() => {
     socket.current = Socket(socketenpoint)
