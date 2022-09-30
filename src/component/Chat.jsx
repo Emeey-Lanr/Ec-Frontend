@@ -35,18 +35,21 @@ const Chat = ({ socket }) => {
     ///Suggested User INfo 
 
     const [sugestedUser, setSugestedUser] = useState([])
+    const [sugested2, setsugested2] = useState([])
     const suggestedUserEnpoint = `http://localhost:5001/user/allluser`
+    const chatEndPoint = "http://localhost:5001/chat/saveChatDetails"
     const [data, setdata] = useState('')
     let m = ''
-
+    let suggestedUserInfo = []
     const userInfo = () => {
-
 
         axios.get(suggestedUserEnpoint).then((result) => {
             if (result.data.status) {
                 setSugestedUser(result.data.result)
+                setsugested2(result.data.result)
             }
         })
+
         axios.get(userInfoEndpoint).then((result) => {
             if (result.data.status) {
                 console.log(result)
@@ -58,13 +61,6 @@ const Chat = ({ socket }) => {
                 socket.current.on('info', (data) => {
                     console.log(data)
                 })
-
-
-
-
-
-
-
 
 
             }
@@ -91,7 +87,9 @@ const Chat = ({ socket }) => {
         setuserClass(true)
         setc('')
 
+        return (() => {
 
+        })
     }, [])
     //messageToBeRecieved
     const [messageRecieved, setMessageRecieved] = useState({
@@ -139,19 +137,26 @@ const Chat = ({ socket }) => {
         }
 
     }
+    const chatListt = () => {
+        if (socket.current) {
+            socket.current.on('chatListList', (info) => {
+                setChatList(info)
+            })
+        }
+    }
+    const messageSentRecieved = () => {
+        if (socket.current) {
+            socket.current.on('messageSentRecieved', (info) => {
+                setMessageRecieved(info)
+            })
+        }
+    }
     useEffect(() => {
 
         chat()
     })
 
 
-    ////Navigation Logic
-    const openChat = () => {
-        // setchatSpace(true)
-        // setc("usernone")
-        // setchatnone("")
-
-    }
     //Responsible for the chat section
     const bringUserChat = () => {
         setchatSpace(true)
@@ -163,6 +168,16 @@ const Chat = ({ socket }) => {
         setPn("profile-space-none")
 
     }
+    ////Navigation Logic
+    const openChat = (user) => {
+        let userMessageScema = userDetails.username + user
+        let reverseMessage = user + userDetails
+        socket.current.emit('userSchema', { one: userMessageScema, two: reverseMessage })
+
+
+
+    }
+
     const bringchat = () => {
         bringUserChat()
 
@@ -214,10 +229,7 @@ const Chat = ({ socket }) => {
         setfS("friend-space-none")
         setchatnone("chat-space-none")
         socket.current.emit('chatList', { user: userDetails.userName })
-        socket.current.on('chatListList', (info) => {
-            console.log(info)
-            setChatList(info)
-        })
+        chatListt()
 
     }
 
@@ -236,14 +248,18 @@ const Chat = ({ socket }) => {
     ///Allow u to search for user
     const lookforUser = (e) => {
 
-        setSugestedUser(sugestedUser.filter((user, id) => {
-            return (
+        setSugestedUser(sugested2.filter((user, id) => {
 
-                user.userName.toUpperCase().indexOf(e.target.value.toUpperCase()) > -1
-            )
+
+            if (user.userName.toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) {
+                return user
+            }
+
 
 
         }))
+
+
     }
 
     const addAsFriend = (mid, id) => {
@@ -293,8 +309,16 @@ const Chat = ({ socket }) => {
         // messageRecieved.messages.push({ recieverName: friendToChatWith, message: messages, time: currentime })
         // setMessageRecieved(messageRecieved)
         socket.current.emit('chatWith', chatInfoToBePassed)
+        messageSentRecieved()
     }
+    const uploadImg = (e) => {
+        let reader = new FileReader()
+        reader.readAsDataURL(e.target.files[0])
+        reader.onload = () => {
+            console.log(reader.result)
+        }
 
+    }
     return (
         <>
             <div className="chat-nav">
@@ -366,10 +390,10 @@ const Chat = ({ socket }) => {
                                                         <p>2</p>
                                                     </div>
                                                 </div>
-                                                <div className="contact-name" onClick={() => openChat()}>
+                                                <div className="contact-name" onClick={() => openChat(user.talkingTo)}>
                                                     <div className="username">
                                                         <h2 className="username-text">{user.talkingTo}</h2>
-                                                        <p className="username-message">{user.messages[user.messages.length - 1]}</p>
+                                                        <p className="username-message">{user.messages[user.messages.length - 1].message}</p>
                                                     </div>
                                                     <div>
                                                         <p>{user.messages[user.messages.length - 1].time}</p>
@@ -432,7 +456,7 @@ const Chat = ({ socket }) => {
                                             <div className="img-square">
                                                 <img src={img} alt="" />
                                                 <label htmlFor="img-upload"><FaCamera />
-                                                    <input type="file" hidden id="img-upload" />
+                                                    <input type="file" hidden id="img-upload" onChange={(e) => uploadImg(e)} />
                                                 </label>
                                             </div>
                                         </div>
