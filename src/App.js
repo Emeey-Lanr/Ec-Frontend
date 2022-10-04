@@ -5,6 +5,7 @@ import Login from "./component/Login"
 import Chat from "./component/Chat"
 import OTP from "./component/OTP"
 import Register from "./component/Register"
+import LandingPage from "./component/LandingPage"
 const App = () => {
 
   const socketenpoint = "http://localhost:5001"
@@ -14,6 +15,7 @@ const App = () => {
   }, [])
   return (
     <Routes>
+      <Route path="/"  element={<LandingPage/>}/>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Register />} />
       <Route path="/otpverification" element={<OTP />} />

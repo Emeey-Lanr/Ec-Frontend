@@ -60,7 +60,10 @@ const Register = () => {
         aboutMe: "",
         ecIdentifier: "EC_Certified_User",
         tokenValidation: false,
-        friendList: []
+        friendList: [],
+        notificationNumber: [0, 0],
+        notification: [],
+        status:'',
     }
     let otpSchema = {
         one: one,
