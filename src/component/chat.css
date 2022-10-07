@@ -185,6 +185,15 @@
 
 }
 
+.chat-space::-webkit-scrollbar {
+    width: 10px;
+}
+
+.chat-space::-webkit-scrollbar-thumb {
+    background-color: #acd4f7;
+    border-radius: 5px;
+}
+
 .username {
     padding-left: 10px;
 }
@@ -464,7 +473,63 @@
 
 }
 
+.spin {
+    font-size: 0.9rem;
+    animation: spin infinite 0.9s running normal;
+}
 
+
+@keyframes spin {
+    0% {
+        transform: rotate(360deg);
+    }
+
+}
+
+.delmodal p {
+    text-align: center;
+    color: #00000086;
+}
+
+.delmodal .divmo {
+    width: 30%;
+    background-color: white;
+    padding: 10px 0;
+    border-radius: 5px;
+}
+
+.delmodal .divmo .divinput {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.delmodal input {
+    border: 1px solid #acd4f759;
+    height: 38px;
+    width: 98%;
+
+}
+
+.delmodal div input:focus {
+    border: none;
+    outline: 2px solid #acd4f7;
+}
+
+.delmodal .divmo .divbutton {
+    width: 98%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.delmodal button {
+    border: none;
+    background-color: #acd4f7;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: white;
+}
 
 @media(max-width:1000px) {
     .chat {
@@ -524,6 +589,10 @@
         width: 90%;
     }
 
+    .delmodal .divmo {
+        width: 40%;
+    }
+
 
 }
 
@@ -577,6 +646,10 @@
         display: none;
     }
 
+    .delmodal .divmo {
+        width: 60%;
+    }
+
 
 }
 
@@ -607,5 +680,9 @@
         border-top: 1px solid #acd4f7;
         background-color: white;
         box-shadow: 1px 2px 4px #f4f5f7;
+    }
+
+    .delmodal .divmo {
+        width: 94%;
     }
 }

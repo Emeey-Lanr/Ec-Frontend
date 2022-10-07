@@ -1,0 +1,16 @@
+.landingPage {
+    background: linear-gradient(to top right, #fcfcfcc4, #f1f3f5, #ffffff, #f6fbff, #f2f7fc, white, #eaeff5cb, white, white);
+
+    padding-bottom: 60px;
+
+}
+
+.link {
+    color: #bebebe;
+
+}
+
+.p-text {
+    color: #747373cb;
+    line-height: 2;
+}

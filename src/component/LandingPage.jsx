@@ -1,8 +1,12 @@
 
+import Logo from "./Logo"
+import { Link } from "react-router-dom"
+import { FaToggleOn } from "react-icons/fa"
+import Img1 from "../images/illl.jpg"
 const LandingPage = () => {
     return (
         <>
-            <h1 className="text-bermuda px-6 my-6 bg-dark w-100">Emeey</h1>
+
         </>
     )
 }

@@ -9,31 +9,24 @@ const OTP = () => {
     const [three, setThree] = useState(-1)
     const [four, setFour] = useState(-1)
     const content = useRef(0)
-    const check = () => {
-        if (one === -1 || two === -1 || three === -1 || four === -1) {
-            console.log(`no`)
-        } else if (one > -1 && two > -1 && three > -1 && four - 1) {
-            console.log(`yes`)
-        }
-    }
+
     const onebox = (e) => {
         setOne(e.target.value)
-        check()
+
     }
 
     const twobox = (e) => {
         setTwo(e.target.value)
-        check()
+
 
     }
     const threebox = (e) => {
         setThree(e.target.value)
-        check()
+
 
     }
     const fourbox = (e) => {
         setFour(e.target.value)
-        check()
 
 
     }

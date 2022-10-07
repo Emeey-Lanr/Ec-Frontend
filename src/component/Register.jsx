@@ -63,13 +63,16 @@ const Register = () => {
         friendList: [],
         notificationNumber: [0, 0],
         notification: [],
-        status:'',
+        status: '',
     }
     let otpSchema = {
         one: one,
         two: two,
         three: three,
         four: four
+    }
+    const setwhenClickedTo = () => {
+        setwhenClicked(false)
     }
     let navigate = useNavigate()
     const otpendpoint = 'http://localhost:5001/user/message'
@@ -84,18 +87,22 @@ const Register = () => {
                         console.log(result)
                         if (result.data.status) {
                             navigate("/otpverification")
+                            setwhenClickedTo()
 
                         } else {
                             navigate("/chat")
+                            setwhenClickedTo()
                         }
                     })
                 } else {
                     if (result.data.duplicateEmail) {
                         setduplicateEmail(true)
                         setemailUsernameMessage(result.data.message)
+                        setwhenClickedTo()
                     } else if (result.data.duplicateUserName) {
                         setduplicateUserName(true)
                         setemailUsernameMessage(result.data.message)
+                        setwhenClickedTo()
                     }
                 }
 

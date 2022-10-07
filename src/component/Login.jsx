@@ -36,6 +36,7 @@ const Login = ({ socket }) => {
             if (result.data.status === false) {
                 setMessage(result.data.message)
                 setresponse(true)
+                setonClick(false)
             } else {
                 if (result.data.tokenverification) {
                     setresponse(false)
@@ -65,17 +66,17 @@ const Login = ({ socket }) => {
                                 <Logo />
                             </div>
 
-                            <p style={{ textAlign: 'left' }}>Enter Your Username</p>
-                            <div className="login-input" >
+                            <p style={{ textAlign: 'left', marginTop: "10px" }}>Enter Your Username</p>
+                            <div className="login-input">
                                 <input type="text" disabled={onclick} onChange={(e) => setusername(e.target.value)} />
 
                             </div>
                             <p style={{ textAlign: 'left' }}>Enter Password</p>
-                            <div className="login-input " style={{ marginBottom: '10px' }} >
+                            <div className="login-input " style={{ marginBottom: '15px' }} >
                                 <input type="text" style={{ borderRadius: 'none' }} disabled={onclick} onChange={(e) => setPassword(e.target.value)} />
 
                             </div>
-                            {response && <div style={{ background: "#fd5454e1", padding: "5px 0" }}>
+                            {response && <div style={{ background: "#fd5454e1", padding: "2px 0" }}>
                                 <p style={{ color: 'white', textAlign: "center", fontWeight: "0.9rem" }}>{message}</p>
                             </div>}
                         </div>

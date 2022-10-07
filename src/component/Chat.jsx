@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import chat from './chat.css'
-import { FaTimes, FaAngleDoubleRight, FaCamera, FaArrowLeft, FaPen, FaPlus, FaBell } from "react-icons/fa"
+import { FaTimes, FaAngleDoubleRight, FaCamera, FaArrowLeft, FaPen, FaPlus, FaBell, FaSpinner } from "react-icons/fa"
 import { IoChatbubblesOutline } from "react-icons/io5"
 import { CgProfile } from "react-icons/cg"
 import { GiMeepleCircle } from "react-icons/gi"
@@ -8,6 +8,8 @@ import { BiSearchAlt } from "react-icons/bi"
 import Logo from "./Logo"
 import img from "../images/noimg.jpg"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
+import not from "../images/not.png"
 const Chat = ({ socket }) => {
     let userToken = localStorage.echatUserToken
     const [fS, setfS] = useState('friend-space-none')
@@ -31,6 +33,7 @@ const Chat = ({ socket }) => {
     const getMyFriendEndpoint = "http://localhost:5001/user/getMyFriend"
     const [myFriend, setMyFriend] = useState([])
     ///userInfo
+    const [changeAboutMeWords, setChangeAboutMeWords] = useState("")
     const [userDetails, setUserDetails] = useState({})
     const [untiltrue, setUntillTrue] = useState(false)
     const userInfoEndpoint = `http://localhost:5001/user/userinfo`
@@ -40,7 +43,64 @@ const Chat = ({ socket }) => {
     const [sugested2, setsugested2] = useState([])
     const suggestedUserEnpoint = `http://localhost:5001/user/allluser`
 
-    const userInfo = () => {
+    const peoplchattedwithList = () => {
+        setbringSearch(false)
+        setnotification(false)
+        setOpenChaat(true)
+        setc("")
+        setPn("profile-space-none")
+        setfS("friend-space-none")
+        setchatnone("chat-space-none")
+    }
+    const suggestedUser = () => {
+        setbringSearch(true)
+        setOpenChaat(false)
+        setnotification(false)
+        setc("")
+        setPn("profile-space-none")
+        setfS("friend-space-none")
+        setchatnone("chat-space-none")
+    }
+
+    const userDetailsFunctionOnly = () => {
+        axios.get(userInfoEndpoint).then((result) => {
+            if (result.data.status) {
+                setUntillTrue(true)
+                setUserDetails(result.data.result)
+                setChangeAboutMeWords(result.data.result.aboutMe)
+            }
+        })
+    }
+    const userDetailsInfo = () => {
+        axios.get(userInfoEndpoint).then((result) => {
+            if (result.data.status) {
+                setUntillTrue(true)
+                setUserDetails(result.data.result)
+                setChangeAboutMeWords(result.data.result.aboutMe)
+
+
+                socket.current.emit("userDetails", { username: result.data.result.userName, userid: socket.current.id })
+                socket.current.on('info', (data) => {
+
+                })
+                socket.current.emit('chatList', { user: result.data.result.userName })
+
+                // socket.current.on('messageSent', (info) => {
+                //     if (info.length > 0) {
+                //         setMessageRecieved(info)
+                //         peoplchattedwithList()
+                //     } else {
+                suggestedUser()
+                //     }
+                // })
+
+
+
+            }
+        })
+    }
+    const [freinds, setFriends] = useState([])
+    const friendInfo = () => {
 
         axios.get(suggestedUserEnpoint).then((result) => {
             if (result.data.status) {
@@ -52,23 +112,10 @@ const Chat = ({ socket }) => {
         axios.get(getMyFriendEndpoint).then((result) => {
             if (result.data.status) {
                 setMyFriend(result.data.myFriend)
+                setFriends(result.data.myFriend)
             }
         })
-        axios.get(userInfoEndpoint).then((result) => {
-            if (result.data.status) {
-                console.log(result)
-                setUntillTrue(true)
-                setUserDetails(result.data.result)
-                console.log(socket.current.id)
 
-                socket.current.emit("userDetails", { username: result.data.result.userName, userid: socket.current.id })
-                socket.current.on('info', (data) => {
-                    console.log(data)
-                })
-
-
-            }
-        })
 
     }
 
@@ -78,18 +125,20 @@ const Chat = ({ socket }) => {
     const notificationEndpoint = "http://localhost:5001/user/notification"
     const getNotification = () => {
         axios.get(notificationEndpoint).then((result) => {
-            setNotifications(result.data.info)
+            setNotifications(result.data.info.reverse())
 
             setNotificationNumber(result.data.notificationpoints)
-            console.log(result.data.notificationpoints.reverse())
+            console.log(result.data.info.reverse())
         })
     }
 
     const jwtTokenEndPoint = `http://localhost:5001/user/jwtverification`
 
     useEffect(() => {
+
+        userDetailsInfo()
         getNotification()
-        userInfo()
+        friendInfo()
         axios.get(jwtTokenEndPoint, {
             headers: {
                 "Authorization": `Bearer ${userToken}`,
@@ -121,7 +170,7 @@ const Chat = ({ socket }) => {
     },
     {
         backgroundColor: '#acd4f7',
-        borderRadius: '20px',
+        borderRadius: '5px 5px 0 5px',
         paddingRight: '20px',
         paddingLeft: '20px',
     }
@@ -136,11 +185,12 @@ const Chat = ({ socket }) => {
     },
     {
         backgroundColor: 'white',
-        borderRadius: '20px',
+        borderRadius: '5px 5px 5px 0',
         paddingRight: '20px',
         paddingLeft: '20px',
     }
     ])
+
 
     const chat = () => {
 
@@ -160,6 +210,7 @@ const Chat = ({ socket }) => {
             })
         }
     }
+
     const messageSentRecieved = () => {
         if (socket.current) {
             socket.current.on('messageSentRecieved', (info) => {
@@ -191,24 +242,33 @@ const Chat = ({ socket }) => {
         setPn("profile-space-none")
 
     }
+    ///Takes you to the chat list
+    const chatlistt = () => {
+        peoplchattedwithList()
+        socket.current.emit('chatList', { user: userDetails.userName })
+        chatListt()
+    }
     ////Navigation Logic
+    const [pairId, setPairId] = useState('')
+    const [reverserPairId, setReversePairId] = useState('')
     const openChat = (user) => {
+        setPairId(userDetails.userName + user)
+        setReversePairId(user + userDetails.userName)
         setfriendToChatWith(user)
         let uniqueId = user + userDetails.userName
-        socket.current.emit('createdChat', { uniqueId: uniqueId })
+        socket.current.emit('createdChat', { uniqueId: uniqueId, removenumberID: userDetails.userName + user })
         messageTracked()
         bringUserChat()
-
-
 
     }
 
     const bringchat = () => {
-        bringUserChat()
+        chatlistt()
 
     }
 
     //Allows users to check profile
+
     const checkprofile = () => {
         setprofileset(true)
         setchatSpace(false)
@@ -232,33 +292,19 @@ const Chat = ({ socket }) => {
     }
 
     //Bring out the search box
-
     const bringsearch = () => {
-        setbringSearch(true)
-        setOpenChaat(false)
-        setnotification(false)
-        setc("")
-        setPn("profile-space-none")
-        setfS("friend-space-none")
-        setchatnone("chat-space-none")
+        suggestedUser()
 
 
     }
     ///Take user back to chat list form their chat room
     const goToChatList = () => {
-        setbringSearch(false)
-        setnotification(false)
-        setOpenChaat(true)
-        setc("")
-        setPn("profile-space-none")
-        setfS("friend-space-none")
-        setchatnone("chat-space-none")
-        socket.current.emit('chatList', { user: userDetails.userName })
-        chatListt()
+        chatlistt()
 
     }
 
     ///Shows the notifaction page
+    const readNotificationEndpoint = "http://localhost:5001/user/readNotification"
     const notificationbtn = () => {
         setbringSearch(false)
         setOpenChaat(false)
@@ -267,6 +313,11 @@ const Chat = ({ socket }) => {
         setPn("profile-space-none")
         setfS("friend-space-none")
         setchatnone("chat-space-none")
+        axios.post(readNotificationEndpoint, { notNumber: notificationNumber }).then((result) => {
+            if (result.data.status) {
+                getNotification()
+            }
+        })
 
 
 
@@ -287,9 +338,10 @@ const Chat = ({ socket }) => {
     let date = new Date()
     let currentime = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 
-    let addAsFriendEndpoint = "http://localhost:5001/user//friendRequest"
-
+    let addAsFriendEndpoint = "http://localhost:5001/user/friendRequest"
+    const [toKnowIfAdded, settoKnowIfAdded] = useState(true)
     const addAsFriend = (mdId, id, username) => {
+        settoKnowIfAdded(false)
         console.log(username)
         let moreinfo = {
             userId: mdId,
@@ -302,14 +354,24 @@ const Chat = ({ socket }) => {
             status: false
         }
         axios.post(addAsFriendEndpoint, { notificationSent: notificationSent, moreinfo: moreinfo, userId: id }).then((result) => {
-
+            if (result.data.status) {
+                friendInfo()
+                settoKnowIfAdded(true)
+            } else {
+                friendInfo()
+            }
         })
 
     }
+    ///DeletE Friend Request
+    const deleteEndpoint = "http://localhost:5001/user/delFriendNotification"
+    const deleteNotification = (infoname) => {
+        axios.post(deleteEndpoint, { name: infoname }).then((result) => {
+
+        })
+    }
     ///Allow you to chat with sugested User
     const [friendToChatWith, setfriendToChatWith] = useState('')
-    const [pairId, setPairId] = useState('')
-    const [reverserPairId, setReversePairId] = useState('')
     const chatWithSuggestedFriend = (suggestedUsername) => {
         bringUserChat()
         setfriendToChatWith(suggestedUsername)
@@ -349,6 +411,7 @@ const Chat = ({ socket }) => {
 
         socket.current.emit('chatWith', chatInfoToBePassed)
         messageSentRecieved()
+        setmessages("")
     }
     //create a connection with a friend
     const chatWithAFriend = (suggestedUsername) => {
@@ -375,7 +438,9 @@ const Chat = ({ socket }) => {
     }
     ///Accept friend request sent
     const acceptFriendEndpoint = "http://localhost:5001/user/friendRequestAccepted"
+    const [accept, setAccept] = useState(false)
     const acceptFriend = (name) => {
+        setAccept(true)
         let theAcceptedFriend = {
             name: name,
             userRequestingTo: userDetails.userName
@@ -387,23 +452,35 @@ const Chat = ({ socket }) => {
             status: true
         }
         axios.post(acceptFriendEndpoint, { notificationSent: notificationSent, theAcceptedFriend: theAcceptedFriend }).then((result) => {
+            if (result.data.status) {
+                getNotification()
+            } else {
 
+            }
         })
 
     }
     ///Changing Profile
     const [changeAboutMe, setChangeAboutMe] = useState(true)
 
-    const [changeAboutMeWords, setChangeAboutMeWords] = useState(userDetails.aboutMe)
+
     //Img Update 
+    const [roll, setroll] = useState(false)
     const ImgUpdate = "http://localhost:5001/user/uploadImg"
     const uploadImg = (e) => {
+        setroll(true)
         let reader = new FileReader()
         reader.readAsDataURL(e.target.files[0])
         reader.onload = () => {
             console.log(reader.result)
             axios.post(ImgUpdate, { imgUrl: reader.result }).then((result) => {
-                console.log(result)
+                if (result.data.status) {
+                    userDetailsFunctionOnly()
+                    setroll(false)
+                } else {
+                    setroll(false)
+                }
+
             })
         }
 
@@ -413,9 +490,64 @@ const Chat = ({ socket }) => {
     }
     const cancelAboutMe = () => {
         setChangeAboutMe(true)
+        setChangeAboutMeWords(userDetails.aboutMe)
     }
-    const deleteAccount = () => {
 
+    ///Delete Account
+    const [deleteAccModal, setdeleteAccModal] = useState(false)
+    const delAccEndpoint = "http://localhost:5001/user/deleteAccount"
+    const deleteAccount = () => {
+        setdeleteAccModal(true)
+
+    }
+    const removeModal = () => {
+        setdeleteAccModal(false)
+    }
+    const [delMessage, setDelMessage] = useState("")
+    let Navigate = useNavigate()
+    const [password, setPassword] = useState("")
+    const deleteAcc = () => {
+        setAccept(true)
+        axios.post(delAccEndpoint, { password: password }).then((result) => {
+            if (result.data.status) {
+                setDelMessage(result.data.message)
+                setTimeout(() => {
+                    Navigate("/login")
+                }, 1500)
+            } else {
+                setDelMessage(result.data.message)
+                setTimeout(() => {
+                    setAccept(false)
+                    setDelMessage("")
+                    setdeleteAccModal(false)
+                }, 1000)
+            }
+
+        })
+    }
+    //upadete yor about me words
+    const [spinSave, setSpinSave] = useState(false)
+    const aboutMeEndpoint = "http://localhost:5001/user/aboutMe"
+    const updateAboutMeWords = () => {
+        setSpinSave(true)
+        axios.post(aboutMeEndpoint, { aboutMe: changeAboutMeWords }).then((result) => {
+            if (result.data.status) {
+                userDetailsFunctionOnly()
+                setSpinSave(false)
+                setChangeAboutMe(true)
+            } else {
+                changeAboutMeWords(userDetails.aboutMe)
+                setChangeAboutMe(false)
+            }
+
+        })
+    }
+    const searchFriend = (e) => {
+        setMyFriend(freinds.filter((friend, id) => {
+            if (friend.userName.toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) {
+                return friend
+            }
+        }))
     }
     return (
         <>
@@ -427,7 +559,7 @@ const Chat = ({ socket }) => {
                         </div>
                         <div className="chat-icon">
                             <div className="user-img">
-                                <img src={userDetails.imgURL === "" ? img : ''} alt="" style={{ width: "40px", height: '40px', borderRadius: "40px" }} />
+                                <img src={userDetails.imgURL === "" ? not : userDetails.imgURL} alt="" style={{ width: "40px", height: '40px', borderRadius: "40px" }} />
                                 <p>{userDetails.userName}</p>
                             </div>
 
@@ -435,8 +567,8 @@ const Chat = ({ socket }) => {
                             <div className="icon-boxs">
                                 <div className="icons">
                                     <button onClick={() => bringsearch()}><BiSearchAlt /> </button>
-                                    <span onClick={() => bringchat()}><IoChatbubblesOutline>26</IoChatbubblesOutline> </span>
-                                    <button onClick={() => notificationbtn()}><FaBell /> <span></span></button>
+                                    <span onClick={() => bringchat()}><IoChatbubblesOutline></IoChatbubblesOutline> </span>
+                                    <button onClick={() => notificationbtn()} style={{ position: "relative" }}><FaBell /> {notificationNumber !== 0 && <sup><span style={{ fontSize: "0.7rem" }}>{notificationNumber}</span></sup>}</button>
                                     <button onClick={() => friendList()}><GiMeepleCircle /> </button>
                                     <button onClick={() => checkprofile()}><CgProfile /> </button>
 
@@ -451,20 +583,20 @@ const Chat = ({ socket }) => {
                                     <input type="text" onChange={(e) => lookforUser(e)} /> <button><FaTimes /> </button>
                                 </div>
                                     <div className="friend-suggestion">
-                                        <div style={{ display: 'flex', justifyContent: "right" }}>
+                                        {/* <div style={{ display: 'flex', justifyContent: "right" }}>
                                             <button><FaTimes /> </button>
-                                        </div>
+                                        </div> */}
                                         <div className="suggested-Friends">
                                             {sugestedUser.map((users, id) => {
                                                 return (
-                                                    <div className="friendsToBeAdded">
+                                                    <div className="friendsToBeAdded" key={id}>
                                                         <div className="suggested-friend-Img-box">
-                                                            <img src={img} alt="" />
+                                                            <img src={users.imgURL === "" ? not : users.imgURL} alt="" />
                                                         </div>
                                                         <p style={{ textAlign: 'center', padding: '10px 0' }}>{users.userName}</p>
                                                         {users.aboutMe !== "" ? <p style={{ textAlign: 'center', padding: '10px 0' }}>{users.aboutMe}</p> : <p></p>}
                                                         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                                                            {users.status === '' ? < button onClick={() => addAsFriend(users._id, id, users.userName)}>Add as friend <FaPlus /> </button> : <></>}
+                                                            {users.status === '' ? < button onClick={() => addAsFriend(users._id, id, users.userName)}>Add as friend {toKnowIfAdded ? <FaPlus /> : <FaSpinner className="spin" />}</button> : <></>}
                                                             {users.status === 'b' && < button> pending </button>}
                                                             {users.status === 'a' && < button > Friend</button>}
                                                             <button onClick={() => chatWithSuggestedFriend(users.userName)}><IoChatbubblesOutline /></button>
@@ -483,12 +615,12 @@ const Chat = ({ socket }) => {
 
                                     chatList.map((user, id) => {
                                         return (
-                                            <div className="contact-space" id="get">
+                                            <div className="contact-space" id="get" key={id}>
                                                 <div className="contact-img">
-                                                    <img src={img} alt="" />
-                                                    <div className="number-message">
+                                                    <img src={not} alt="" />
+                                                    {user.messagesNumber !== 0 && <div className="number-message">
                                                         <p>{user.messagesNumber}</p>
-                                                    </div>
+                                                    </div>}
                                                 </div>
                                                 <div className="contact-name" onClick={() => openChat(user.talkingTo)}>
                                                     <div className="username">
@@ -507,7 +639,7 @@ const Chat = ({ socket }) => {
                                 }
                                 {notification &&
                                     notifications.map((info, id) => (
-                                        < div className="notification-space" style={{ boxShadow: "none" }} id="get">
+                                        < div className="notification-space" style={{ boxShadow: "none" }} id="get" key={id}>
 
                                             <div className="notification-info">
                                                 <h2 className="notification-heading">Hey {userDetails.userName}</h2>
@@ -515,7 +647,7 @@ const Chat = ({ socket }) => {
                                                 <p className="notification-rInfo">{info.time}</p>
                                             </div>
                                             <div className="notification-action">
-                                                {!info.status && <><button onClick={() => acceptFriend(info.name)}>Accept</button><button>Delete</button></>}
+                                                {!info.status && <><button onClick={() => acceptFriend(info.name)}>Accept  {accept && <FaSpinner className="spin" />}</button><button onClick={() => deleteNotification(info.name)}>Delete</button></>}
                                             </div>
                                         </div>
                                     ))
@@ -531,7 +663,7 @@ const Chat = ({ socket }) => {
                                         </div>
                                         {messageRecieved.messages.map((info, id) => {
                                             return (
-                                                <div className="chat-a" style={info.recieverName !== userDetails.userName ? senderStyle[0] : recieverStyle[0]}>
+                                                <div className="chat-a" key={id} style={info.recieverName !== userDetails.userName ? senderStyle[0] : recieverStyle[0]}>
                                                     <div style={info.recieverName !== userDetails.userName ? senderStyle[1] : recieverStyle[1]}>
                                                         <p className="text">
                                                             {info.message}
@@ -557,9 +689,10 @@ const Chat = ({ socket }) => {
                                             <button><FaArrowLeft /> </button><p>Profile</p>
                                         </div>
                                         <div className="img-upload-div">
-                                            <div className="img-square">
-                                                <img src={img} alt="" />
+                                            <div className="img-square" style={{ postion: "relative" }}>
+                                                <img src={userDetails.imgURL === "" ? not : userDetails.imgURL} alt="" style={{ Postion: "absolute" }} />
                                                 <label htmlFor="img-upload"><FaCamera />
+                                                    {roll && <FaSpinner className="spin" style={{ positon: "absolute", top: "40px", left: "90px" }} />}
                                                     <input type="file" hidden id="img-upload" onChange={(e) => uploadImg(e)} />
                                                 </label>
                                             </div>
@@ -573,14 +706,14 @@ const Chat = ({ socket }) => {
                                                     :
                                                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
                                                         <button onClick={() => cancelAboutMe()} style={{ border: 'none', background: 'none', color: '#acd4f7', padding: "0 20px 0 20px", fontSize: "1.1rem", borderRight: "1px solid ash" }}>Cancel</button>
-                                                        <button style={{ border: 'none', background: 'none', color: '#acd4f7', fontSize: "1.1rem", padding: "0 0 0 20px", }}>save</button>
+                                                        <button onClick={() => updateAboutMeWords()} style={{ border: 'none', background: 'none', color: '#acd4f7', fontSize: "1.1rem", padding: "0 0 0 20px", }}>save {spinSave && <FaSpinner className="spin" />}</button>
                                                     </div>
                                                 }
                                             </div>
                                         </div>
                                         <div className="profile-info">
                                             <p>Email</p>
-                                            <input type="text" disabled={true} placholder={userDetails.Email} />
+                                            <input type="text" disabled={true} value={userDetails.Email} />
                                         </div>
                                         <div className="profile-info">
                                             <p>Username</p>
@@ -593,6 +726,7 @@ const Chat = ({ socket }) => {
 
 
                                     </div>}
+
                                 {friendSpace &&
 
                                     < div className={friendSpaceStyleConditionally ? `friend-space ${fS}` : `kkk`}>
@@ -600,16 +734,17 @@ const Chat = ({ socket }) => {
                                             <p style={{ color: 'white' }}>Friend List</p>
                                         </div>
                                         <div className="user-search">
-                                            <input type="text" placeholder="Search" />
+                                            <input type="text" placeholder="Search" onChange={(e) => searchFriend(e)} />
                                         </div>
                                         <div className="friend-suggestion">
                                             <div className="suggested-Friends">
                                                 {myFriend.length > 0 ? myFriend.map((freind, id) => (
-                                                    <div className="friendsToBeAdded">
+                                                    <div className="friendsToBeAdded" key={id}>
                                                         <div className="suggested-friend-Img-box">
-                                                            <img src={img} alt="" />
+                                                            <img src={freind.imgURL === "" ? not : freind.imgURL} alt="" />
                                                         </div>
                                                         <p style={{ textAlign: 'center', padding: '10px 0' }}>{freind.userName}</p>
+                                                        <p style={{ textAlign: 'center', padding: '5px 0' }}>{freind.aboutMe}</p>
                                                         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                                                             <button onClick={() => chatWithAFriend(freind.userName)}><IoChatbubblesOutline /></button>
                                                         </div>
@@ -630,6 +765,23 @@ const Chat = ({ socket }) => {
                     </div>
                 </div>
             </div >
+            ///modal
+            {deleteAccModal && <div className="delmodal" style={{ width: "100%", height: "100%", position: "fixed", top: "0", background: "#0000008e", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <div className="divmo">
+                    <div>
+                        < FaTimes style={{ color: "#00000086" }} onClick={() => removeModal()} />
+                    </div>
+                    <p>Enter your password to delete Account</p>
+                    <div className="divinput">
+                        <input type="text" onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                    <p style={{ color: 'red', fontSize: "0.9rem", textAlign: 'center' }}>{delMessage}</p>
+                    <div className="divbutton">
+                        <button onClick={() => deleteAcc()}>Delete{accept && <FaSpinner className="spin" />}</button>
+                    </div>
+                </div>
+
+            </div>}
         </>
     )
 }
