@@ -17,7 +17,7 @@ const Login = ({ socket }) => {
     const [three, setThree] = useState(Math.trunc(Math.random() * 9))
     const [four, setFour] = useState(Math.trunc(Math.random() * 9))
     const check = /^[\d]{11,14}$/
-    const signinEndpoint = `http://localhost:5001/user/login`
+    const signinEndpoint = `https://ec-chat.herokuapp.com/user/login`
     let navigate = useNavigate()
     let userSchema = {
         username: username,
@@ -29,7 +29,7 @@ const Login = ({ socket }) => {
         three: three,
         four: four
     }
-    const otpendpoint = 'http://localhost:5001/user/message'
+    const otpendpoint = 'https://ec-chat.herokuapp.com/user/message'
     const proceed = () => {
         setonClick(true)
         axios.post(signinEndpoint, { userSchema: userSchema, otpSchema: otpSchema }).then((result) => {
@@ -73,7 +73,7 @@ const Login = ({ socket }) => {
                             </div>
                             <p style={{ textAlign: 'left' }}>Enter Password</p>
                             <div className="login-input " style={{ marginBottom: '15px' }} >
-                                <input type="text" style={{ borderRadius: 'none' }} disabled={onclick} onChange={(e) => setPassword(e.target.value)} />
+                                <input type="password" style={{ borderRadius: 'none' }} disabled={onclick} onChange={(e) => setPassword(e.target.value)} />
 
                             </div>
                             {response && <div style={{ background: "#fd5454e1", padding: "2px 0" }}>

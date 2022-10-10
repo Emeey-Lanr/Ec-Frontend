@@ -44,7 +44,7 @@ const LandingPage = () => {
     const [spin, setspin] = useState(false)
     const [name, setname] = useState("")
     const [message, setmessage] = useState("")
-    const sendMessageEndpoint = "http://localhost:5001/user/sendmeMeassge"
+    const sendMessageEndpoint = "https://ec-chat.herokuapp.com/user/sendmeMeassge"
     const sendMessage = () => {
         if (message === '' && name === '') {
             setcolor('red')
@@ -127,8 +127,8 @@ const LandingPage = () => {
                         <img src="" alt="" />
                     </div>
                     <p>
-                        Ec always ring the bell for you to hear, if sent messages, friend Request and a lot more,
-                        you dont't have to get lost on when it happen, why it has happened. You always get to know and see
+                        Ec always rings the bell for you to hear, if sent messages, friend Request and a lot more,
+                        you dont't have to get lost tracking it, why it has happened?  You always get to know and see.
 
                     </p>
                     <div className="btnspace">
@@ -139,7 +139,7 @@ const LandingPage = () => {
                 <div className="info2">
                     <h1>Request</h1>
                     <p>
-                        You get to send you loved ones friend request and they get to see it, Ec allows you to do that.
+                        You get to send your loved ones friend request and they get to see it, Ec allows you to do that.
 
                     </p>
                     <div className="btnspace">

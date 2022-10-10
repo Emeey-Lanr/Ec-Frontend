@@ -38,7 +38,7 @@ const OTP = () => {
     }
     const [ifInvalid, setifInvalid] = useState(false)
     const [onbtnClicked, setonbtnClicked] = useState(false)
-    const otpVerificationEndPoint = 'http://localhost:5001/user/otpVerifaction'
+    const otpVerificationEndPoint = 'https://ec-chat.herokuapp.com/user/otpVerifaction'
     let navigate = useNavigate()
     const proceed = () => {
         setonbtnClicked(true)

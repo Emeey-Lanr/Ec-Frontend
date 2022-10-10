@@ -8,14 +8,14 @@ import Register from "./component/Register"
 import LandingPage from "./component/LandingPage"
 const App = () => {
 
-  const socketenpoint = "http://localhost:5001"
+  const socketenpoint = "https://ec-chat.herokuapp.com/"
   let socket = useRef()
   useEffect(() => {
     socket.current = Socket(socketenpoint)
   }, [])
   return (
     <Routes>
-      <Route path="/"  element={<LandingPage/>}/>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Register />} />
       <Route path="/otpverification" element={<OTP />} />

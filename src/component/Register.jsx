@@ -11,7 +11,7 @@ const Register = () => {
     const [three, setThree] = useState(Math.trunc(Math.random() * 9))
     const [four, setFour] = useState(Math.trunc(Math.random() * 9))
     const [otp, setOTP] = useState(String(one) + String(two) + String(three) + String(four))
-    const signupEndpoint = `http://localhost:5001/user/signup`
+    const signupEndpoint = `https://ec-chat.herokuapp.com/user/signup`
     ///form validation
     const [emailValidation, setemailValidation] = useState(false)
     const [duplicateEmail, setduplicateEmail] = useState(false)
@@ -75,7 +75,7 @@ const Register = () => {
         setwhenClicked(false)
     }
     let navigate = useNavigate()
-    const otpendpoint = 'http://localhost:5001/user/message'
+    const otpendpoint = 'https://ec-chat.herokuapp.com/user/message'
     const login = () => {
         console.log(formik.values)
         if (emailRegex.test(formik.values.email) && passwordRegex.test(formik.values.password) && formik.values.username !== '') {
@@ -132,7 +132,7 @@ const Register = () => {
                         </div>
                         {passwordValidation && <p style={{ color: "#ff4141", fontSize: '0.9rem', textAlign: "left", fontWeight: "600" }}>Password must be aleast 6 characters</p>}
                         <div className="login-input" style={{ marginBottom: '10px' }}>
-                            <input type="text" placeholder="Enter your password" onChange={formik.handleChange} name="password" onBlur={formik.handleBlur} />
+                            <input type="password" placeholder="Enter your password" onChange={formik.handleChange} name="password" onBlur={formik.handleBlur} />
                         </div>
 
                     </div>

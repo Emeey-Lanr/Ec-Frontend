@@ -30,18 +30,18 @@ const Chat = ({ socket }) => {
     const [notification, setnotification] = useState(false)
 
     ///FriendsInfo 
-    const getMyFriendEndpoint = "http://localhost:5001/user/getMyFriend"
+    const getMyFriendEndpoint = "https://ec-chat.herokuapp.com/user/getMyFriend"
     const [myFriend, setMyFriend] = useState([])
     ///userInfo
     const [changeAboutMeWords, setChangeAboutMeWords] = useState("")
     const [userDetails, setUserDetails] = useState({})
     const [untiltrue, setUntillTrue] = useState(false)
-    const userInfoEndpoint = `http://localhost:5001/user/userinfo`
+    const userInfoEndpoint = `https://ec-chat.herokuapp.com/user/userinfo`
     ///Suggested User INfo 
 
     const [sugestedUser, setSugestedUser] = useState([])
     const [sugested2, setsugested2] = useState([])
-    const suggestedUserEnpoint = `http://localhost:5001/user/allluser`
+    const suggestedUserEnpoint = `https://ec-chat.herokuapp.com/user/allluser`
 
     const peoplchattedwithList = () => {
         setbringSearch(false)
@@ -85,14 +85,8 @@ const Chat = ({ socket }) => {
                 })
                 socket.current.emit('chatList', { user: result.data.result.userName })
 
-                // socket.current.on('messageSent', (info) => {
-                //     if (info.length > 0) {
-                //         setMessageRecieved(info)
-                //         peoplchattedwithList()
-                //     } else {
+
                 suggestedUser()
-                //     }
-                // })
 
 
 
@@ -122,18 +116,18 @@ const Chat = ({ socket }) => {
     //////////nOTIFICATION
     const [notifications, setNotifications] = useState([])
     const [notificationNumber, setNotificationNumber] = useState(0)
-    const notificationEndpoint = "http://localhost:5001/user/notification"
+    const notificationEndpoint = "https://ec-chat.herokuapp.com/user/notification"
     const getNotification = () => {
         axios.get(notificationEndpoint).then((result) => {
-            setNotifications(result.data.info.reverse())
-
+            let m = result.data.info.reverse()
+            setNotifications(m)
             setNotificationNumber(result.data.notificationpoints)
             console.log(result.data.info.reverse())
         })
     }
 
-    const jwtTokenEndPoint = `http://localhost:5001/user/jwtverification`
-    let move = useNavigate()
+    const jwtTokenEndPoint = `https://ec-chat.herokuapp.com/user/jwtverification`
+    let navigate = useNavigate()
     useEffect(() => {
 
         axios.get(jwtTokenEndPoint, {
@@ -148,7 +142,7 @@ const Chat = ({ socket }) => {
                 getNotification()
                 friendInfo()
             } else {
-                move('/login')
+                navigate('/login')
             }
         })
         setuserClass(true)
@@ -309,7 +303,7 @@ const Chat = ({ socket }) => {
     }
 
     ///Shows the notifaction page
-    const readNotificationEndpoint = "http://localhost:5001/user/readNotification"
+    const readNotificationEndpoint = "https://ec-chat.herokuapp.com/user/readNotification"
     const notificationbtn = () => {
         setbringSearch(false)
         setOpenChaat(false)
@@ -320,6 +314,9 @@ const Chat = ({ socket }) => {
         setchatnone("chat-space-none")
         axios.post(readNotificationEndpoint, { notNumber: notificationNumber }).then((result) => {
             if (result.data.status) {
+                getNotification()
+                friendInfo()
+            } else {
                 getNotification()
             }
         })
@@ -343,7 +340,7 @@ const Chat = ({ socket }) => {
     let date = new Date()
     let currentime = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 
-    let addAsFriendEndpoint = "http://localhost:5001/user/friendRequest"
+    let addAsFriendEndpoint = "https://ec-chat.herokuapp.com/user/friendRequest"
     const [toKnowIfAdded, settoKnowIfAdded] = useState(true)
     const [numbid, setnumbid] = useState(-1)
     const addAsFriend = (mdId, id, username) => {
@@ -373,7 +370,7 @@ const Chat = ({ socket }) => {
 
     }
     ///DeletE Friend Request
-    const deleteEndpoint = "http://localhost:5001/user/delFriendNotification"
+    const deleteEndpoint = "https://ec-chat.herokuapp.com/user/delFriendNotification"
     const [deletId, setdeletId] = useState(-1)
     const deleteNotification = (infoname, id) => {
         setdeletId(id)
@@ -457,7 +454,7 @@ const Chat = ({ socket }) => {
         socket.current.emit('userSchema', { one: userMessageScema, two: reverseMessage })
     }
     ///Accept friend request sent
-    const acceptFriendEndpoint = "http://localhost:5001/user/friendRequestAccepted"
+    const acceptFriendEndpoint = "https://ec-chat.herokuapp.com/user/friendRequestAccepted"
     const [accept, setAccept] = useState(false)
     const [acceptid, setacceptid] = useState(-1)
     const acceptFriend = (name, id) => {
@@ -490,7 +487,7 @@ const Chat = ({ socket }) => {
 
     //Img Update 
     const [roll, setroll] = useState(false)
-    const ImgUpdate = "http://localhost:5001/user/uploadImg"
+    const ImgUpdate = "https://ec-chat.herokuapp.com/user/uploadImg"
     const uploadImg = (e) => {
         setroll(true)
         let reader = new FileReader()
@@ -521,7 +518,7 @@ const Chat = ({ socket }) => {
 
     ///Delete Account
     const [deleteAccModal, setdeleteAccModal] = useState(false)
-    const delAccEndpoint = "http://localhost:5001/user/deleteAccount"
+    const delAccEndpoint = "https://ec-chat.herokuapp.com/user/deleteAccount"
     const deleteAccount = () => {
         setdeleteAccModal(true)
 
@@ -554,7 +551,7 @@ const Chat = ({ socket }) => {
     }
     //upadete yor about me words
     const [spinSave, setSpinSave] = useState(false)
-    const aboutMeEndpoint = "http://localhost:5001/user/aboutMe"
+    const aboutMeEndpoint = "https://ec-chat.herokuapp.com/user/aboutMe"
     const updateAboutMeWords = () => {
         setSpinSave(true)
         axios.post(aboutMeEndpoint, { aboutMe: changeAboutMeWords }).then((result) => {
@@ -804,7 +801,7 @@ const Chat = ({ socket }) => {
                     </div>
                     <p>Enter your password to delete Account</p>
                     <div className="divinput">
-                        <input type="text" onChange={(e) => setPassword(e.target.value)} />
+                        <input type="password" onChange={(e) => setPassword(e.target.value)} />
                     </div>
                     <p style={{ color: 'red', fontSize: "0.9rem", textAlign: 'center' }}>{delMessage}</p>
                     <div className="divbutton">
