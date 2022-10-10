@@ -133,12 +133,9 @@ const Chat = ({ socket }) => {
     }
 
     const jwtTokenEndPoint = `http://localhost:5001/user/jwtverification`
-
+    let move = useNavigate()
     useEffect(() => {
 
-        userDetailsInfo()
-        getNotification()
-        friendInfo()
         axios.get(jwtTokenEndPoint, {
             headers: {
                 "Authorization": `Bearer ${userToken}`,
@@ -146,7 +143,13 @@ const Chat = ({ socket }) => {
                 "Accept": "application/json",
             }
         }).then((result) => {
-
+            if (result.data.status) {
+                userDetailsInfo()
+                getNotification()
+                friendInfo()
+            } else {
+                move('/login')
+            }
         })
         setuserClass(true)
         setc('')
@@ -292,8 +295,10 @@ const Chat = ({ socket }) => {
     }
 
     //Bring out the search box
+    const [searchOff, setsearchOff] = useState(true)
     const bringsearch = () => {
         suggestedUser()
+        setsearchOff(true)
 
 
     }
@@ -340,7 +345,9 @@ const Chat = ({ socket }) => {
 
     let addAsFriendEndpoint = "http://localhost:5001/user/friendRequest"
     const [toKnowIfAdded, settoKnowIfAdded] = useState(true)
+    const [numbid, setnumbid] = useState(-1)
     const addAsFriend = (mdId, id, username) => {
+        setnumbid(id)
         settoKnowIfAdded(false)
         console.log(username)
         let moreinfo = {
@@ -355,24 +362,33 @@ const Chat = ({ socket }) => {
         }
         axios.post(addAsFriendEndpoint, { notificationSent: notificationSent, moreinfo: moreinfo, userId: id }).then((result) => {
             if (result.data.status) {
+                setnumbid(-1)
                 friendInfo()
                 settoKnowIfAdded(true)
             } else {
                 friendInfo()
+                setnumbid(-1)
             }
         })
 
     }
     ///DeletE Friend Request
     const deleteEndpoint = "http://localhost:5001/user/delFriendNotification"
-    const deleteNotification = (infoname) => {
+    const [deletId, setdeletId] = useState(-1)
+    const deleteNotification = (infoname, id) => {
+        setdeletId(id)
         axios.post(deleteEndpoint, { name: infoname }).then((result) => {
-
+            if (result.data.status) {
+                getNotification()
+                setdeletId(-1)
+            } else {
+                setdeletId(-1)
+            }
         })
     }
     ///Allow you to chat with sugested User
     const [friendToChatWith, setfriendToChatWith] = useState('')
-    const chatWithSuggestedFriend = (suggestedUsername) => {
+    const chatWithSuggestedFriend = (suggestedUsername, imgUrl) => {
         bringUserChat()
         setfriendToChatWith(suggestedUsername)
         setPairId(userDetails.userName + suggestedUsername)
@@ -382,6 +398,7 @@ const Chat = ({ socket }) => {
             user: userDetails.userName,
             talkingTo: suggestedUsername,
             uniqueId: pairId,
+            imgUrl: imgUrl,
             messages: [],
             messagesNumber: 0
         }
@@ -389,6 +406,7 @@ const Chat = ({ socket }) => {
             user: suggestedUsername,
             talkingTo: userDetails.userName,
             uniqueId: suggestedUsername + userDetails.userName,
+            imgUrl: userDetails.imgURL,
             messages: [],
             messagesNumber: 0,
         }
@@ -414,7 +432,7 @@ const Chat = ({ socket }) => {
         setmessages("")
     }
     //create a connection with a friend
-    const chatWithAFriend = (suggestedUsername) => {
+    const chatWithAFriend = (suggestedUsername, img) => {
         bringUserChat()
         setfriendToChatWith(suggestedUsername)
         setPairId(userDetails.userName + suggestedUsername)
@@ -424,6 +442,7 @@ const Chat = ({ socket }) => {
             user: userDetails.userName,
             talkingTo: suggestedUsername,
             uniqueId: pairId,
+            imgUrl: img,
             messages: [],
             messagesNumber: 0
         }
@@ -431,6 +450,7 @@ const Chat = ({ socket }) => {
             user: suggestedUsername,
             talkingTo: userDetails.userName,
             uniqueId: suggestedUsername + userDetails.userName,
+            imgUrl: userDetails.imgURL,
             messages: [],
             messagesNumber: 0,
         }
@@ -439,7 +459,9 @@ const Chat = ({ socket }) => {
     ///Accept friend request sent
     const acceptFriendEndpoint = "http://localhost:5001/user/friendRequestAccepted"
     const [accept, setAccept] = useState(false)
-    const acceptFriend = (name) => {
+    const [acceptid, setacceptid] = useState(-1)
+    const acceptFriend = (name, id) => {
+        setacceptid(id)
         setAccept(true)
         let theAcceptedFriend = {
             name: name,
@@ -454,7 +476,9 @@ const Chat = ({ socket }) => {
         axios.post(acceptFriendEndpoint, { notificationSent: notificationSent, theAcceptedFriend: theAcceptedFriend }).then((result) => {
             if (result.data.status) {
                 getNotification()
+                setnumbid(-1)
             } else {
+                setnumbid(-1)
 
             }
         })
@@ -477,8 +501,10 @@ const Chat = ({ socket }) => {
                 if (result.data.status) {
                     userDetailsFunctionOnly()
                     setroll(false)
+                    socket.current.emit("imgUpload", { imgUrl: result.data.imgURL, userDetails: userDetails.userName })
                 } else {
                     setroll(false)
+
                 }
 
             })
@@ -511,6 +537,7 @@ const Chat = ({ socket }) => {
         axios.post(delAccEndpoint, { password: password }).then((result) => {
             if (result.data.status) {
                 setDelMessage(result.data.message)
+                localStorage.removeItem("echatUserToken")
                 setTimeout(() => {
                     Navigate("/login")
                 }, 1500)
@@ -549,6 +576,10 @@ const Chat = ({ socket }) => {
             }
         }))
     }
+
+    const offSearch = () => {
+        setsearchOff(false)
+    }
     return (
         <>
             <div className="chat-nav">
@@ -579,9 +610,9 @@ const Chat = ({ socket }) => {
                         </div>
                         <div className="chat-div">
                             <div className={userClass ? `user ${c}` : "usernone"} id="userspace">
-                                {bringSearch && <> < div className="user-search">
-                                    <input type="text" onChange={(e) => lookforUser(e)} /> <button><FaTimes /> </button>
-                                </div>
+                                {bringSearch && <> {searchOff && < div className="user-search">
+                                    <input type="text" onChange={(e) => lookforUser(e)} /> <button onClick={() => offSearch()}><FaTimes /> </button>
+                                </div>}
                                     <div className="friend-suggestion">
                                         {/* <div style={{ display: 'flex', justifyContent: "right" }}>
                                             <button><FaTimes /> </button>
@@ -596,10 +627,10 @@ const Chat = ({ socket }) => {
                                                         <p style={{ textAlign: 'center', padding: '10px 0' }}>{users.userName}</p>
                                                         {users.aboutMe !== "" ? <p style={{ textAlign: 'center', padding: '10px 0' }}>{users.aboutMe}</p> : <p></p>}
                                                         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                                                            {users.status === '' ? < button onClick={() => addAsFriend(users._id, id, users.userName)}>Add as friend {toKnowIfAdded ? <FaPlus /> : <FaSpinner className="spin" />}</button> : <></>}
+                                                            {users.status === '' ? < button onClick={() => addAsFriend(users._id, id, users.userName)}>Add as friend {id === numbid ? <FaSpinner className="spin" /> : <FaPlus />}</button> : <></>}
                                                             {users.status === 'b' && < button> pending </button>}
                                                             {users.status === 'a' && < button > Friend</button>}
-                                                            <button onClick={() => chatWithSuggestedFriend(users.userName)}><IoChatbubblesOutline /></button>
+                                                            <button onClick={() => chatWithSuggestedFriend(users.userName, users.imgURL)}><IoChatbubblesOutline /></button>
                                                         </div>
                                                     </div>
                                                 )
@@ -617,7 +648,7 @@ const Chat = ({ socket }) => {
                                         return (
                                             <div className="contact-space" id="get" key={id}>
                                                 <div className="contact-img">
-                                                    <img src={not} alt="" />
+                                                    <img src={user.imgUrl === "" ? not : user.imgUrl} alt="" />
                                                     {user.messagesNumber !== 0 && <div className="number-message">
                                                         <p>{user.messagesNumber}</p>
                                                     </div>}
@@ -647,7 +678,7 @@ const Chat = ({ socket }) => {
                                                 <p className="notification-rInfo">{info.time}</p>
                                             </div>
                                             <div className="notification-action">
-                                                {!info.status && <><button onClick={() => acceptFriend(info.name)}>Accept  {accept && <FaSpinner className="spin" />}</button><button onClick={() => deleteNotification(info.name)}>Delete</button></>}
+                                                {!info.status && <><button onClick={() => acceptFriend(info.name, id)}>Accept  {id === acceptid && <FaSpinner className="spin" />}</button><button onClick={() => deleteNotification(info.name, id)}>Delete {id === deletId && <FaSpinner className="spin" />}</button></>}
                                             </div>
                                         </div>
                                     ))
@@ -690,9 +721,9 @@ const Chat = ({ socket }) => {
                                         </div>
                                         <div className="img-upload-div">
                                             <div className="img-square" style={{ postion: "relative" }}>
-                                                <img src={userDetails.imgURL === "" ? not : userDetails.imgURL} alt="" style={{ Postion: "absolute" }} />
+                                                <img src={userDetails.imgURL === "" ? not : userDetails.imgURL} alt="" style={{ postion: "absolute", width: "100%", objectFit: "cover" }} />
                                                 <label htmlFor="img-upload"><FaCamera />
-                                                    {roll && <FaSpinner className="spin" style={{ positon: "absolute", top: "40px", left: "90px" }} />}
+                                                    {roll && <FaSpinner className="spin" style={{ positon: "absolute", top: "40px", left: "90px", color: "#acd4ff" }} />}
                                                     <input type="file" hidden id="img-upload" onChange={(e) => uploadImg(e)} />
                                                 </label>
                                             </div>
@@ -746,7 +777,7 @@ const Chat = ({ socket }) => {
                                                         <p style={{ textAlign: 'center', padding: '10px 0' }}>{freind.userName}</p>
                                                         <p style={{ textAlign: 'center', padding: '5px 0' }}>{freind.aboutMe}</p>
                                                         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                                                            <button onClick={() => chatWithAFriend(freind.userName)}><IoChatbubblesOutline /></button>
+                                                            <button onClick={() => chatWithAFriend(freind.userName, freind.imgURL)}><IoChatbubblesOutline /></button>
                                                         </div>
                                                     </div>
                                                 )) : <div>

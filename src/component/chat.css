@@ -140,6 +140,8 @@
 
 .contact-img img {
     border-radius: 40px;
+    width: 100%;
+    object-fit: cover;
 }
 
 .number-message {
