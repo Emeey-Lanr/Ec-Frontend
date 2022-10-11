@@ -540,10 +540,21 @@
     }
 }
 
+@media (max-width:500px) {
+    .contactbox {
+        width: 80%;
+    }
+}
+
 @media (max-width:450px) {
-    .messagepaint1 {
-        top: 100%;
-        width: 76%;
+
+    .message {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .messagepaint {
+        display: none;
     }
 
     .info {
@@ -558,11 +569,5 @@
     .info2 {
         box-shadow: unset;
         border-top: 1px solid #acd4f7;
-    }
-}
-
-@media (max-width:500px) {
-    .contactbox {
-        width: 80%;
     }
 }

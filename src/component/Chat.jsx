@@ -312,7 +312,7 @@ const Chat = ({ socket }) => {
         setPn("profile-space-none")
         setfS("friend-space-none")
         setchatnone("chat-space-none")
-        axios.post(readNotificationEndpoint, { notNumber: notificationNumber }).then((result) => {
+        axios.post(readNotificationEndpoint, { notNumber: notificationNumber, userDetails: userDetails.Email }).then((result) => {
             if (result.data.status) {
                 getNotification()
                 friendInfo()
@@ -470,7 +470,7 @@ const Chat = ({ socket }) => {
             message: `${userDetails.userName} accepted your friend request`,
             status: true
         }
-        axios.post(acceptFriendEndpoint, { notificationSent: notificationSent, theAcceptedFriend: theAcceptedFriend }).then((result) => {
+        axios.post(acceptFriendEndpoint, { notificationSent: notificationSent, theAcceptedFriend: theAcceptedFriend, userDetails: userDetails.Email }).then((result) => {
             if (result.data.status) {
                 getNotification()
                 setnumbid(-1)
