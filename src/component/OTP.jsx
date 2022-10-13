@@ -36,6 +36,7 @@ const OTP = () => {
         three: three,
         four: four
     }
+    const [message, setmessage] = useState("")
     const [ifInvalid, setifInvalid] = useState(false)
     const [onbtnClicked, setonbtnClicked] = useState(false)
     const otpVerificationEndPoint = 'https://ec-chat.herokuapp.com/user/otpVerifaction'
@@ -46,13 +47,14 @@ const OTP = () => {
             if (result.data.status) {
                 navigate('/chat')
             } else {
+                setmessage(result.data.message)
                 setonbtnClicked(false)
                 setifInvalid(true)
             }
         })
     }
     const resend = () => {
-
+        navigate('/login')
     }
     return (
         <div className="body-login">
@@ -67,7 +69,7 @@ const OTP = () => {
                             <input type="text" style={{ textAlign: "center", fontSize: "1.2rem", fontWeight: "500" }} onChange={(e) => fourbox(e)} />
                         </div>
                     </div>
-                    {ifInvalid && <p style={{ textAlign: "center", color: "red", fontSize: "0.9rem" }}>Invalid Pin</p>}
+                    {ifInvalid && <p style={{ textAlign: "center", color: "red", fontSize: "0.9rem" }}>{message}</p>}
                     <div className="login-btn" style={{ marginTop: "20px" }}>
                         <button onClick={() => proceed()}>Proceed  {onbtnClicked && <FaSpinner className="spin" style={{ color: "white" }} />}</button>
 

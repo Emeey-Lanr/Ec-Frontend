@@ -3,7 +3,7 @@ import Logo from "./Logo"
 import { FaTimes, FaSpinner } from "react-icons/fa"
 import axios from "axios"
 import { useFormik } from "formik"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 const Register = () => {
     const [whenClicked, setwhenClicked] = useState(false)
     const [one, setOne] = useState(Math.trunc(Math.random() * 9))
@@ -138,6 +138,10 @@ const Register = () => {
                     </div>
                     <div className="login-btn">
                         <button onClick={() => login()}>Signup   {whenClicked && <FaSpinner style={{ color: "white" }} className="spin" />}</button>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <p style={{ fontSize: "0.9rem", color: "#acd4ff" }}>Already got an acount ?</p>
+                        <Link to="/login" style={{ color: "#acd4ff", padding: "0 10px" }}>Login</Link>
                     </div>
 
                 </form>

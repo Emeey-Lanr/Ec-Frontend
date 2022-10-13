@@ -21,7 +21,7 @@ const LandingPage = () => {
     }
     let navigate = useNavigate()
     const moveTo = () => {
-        navigate('/signin')
+        navigate('/signup')
     }
     const [con, setcon] = useState(false)
     const contact = () => {

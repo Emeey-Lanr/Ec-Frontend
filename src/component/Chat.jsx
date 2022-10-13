@@ -11,6 +11,7 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import not from "../images/not.png"
 const Chat = ({ socket }) => {
+    const userValue = useRef()
     let userToken = localStorage.echatUserToken
     const [fS, setfS] = useState('friend-space-none')
     const [c, setc] = useState('usernone')
@@ -414,6 +415,7 @@ const Chat = ({ socket }) => {
 
     const [messages, setmessages] = useState('')
     const chatWith = () => {
+        console.log(userValue.current.value)
         let chatInfoToBePassed = {
             senderInfo: userDetails.userName,
             recieverInfo: friendToChatWith,
@@ -427,6 +429,7 @@ const Chat = ({ socket }) => {
         socket.current.emit('chatWith', chatInfoToBePassed)
         messageSentRecieved()
         setmessages("")
+        userValue.current.value = ""
     }
     //create a connection with a friend
     const chatWithAFriend = (suggestedUsername, img) => {
@@ -611,9 +614,7 @@ const Chat = ({ socket }) => {
                                     <input type="text" onChange={(e) => lookforUser(e)} /> <button onClick={() => offSearch()}><FaTimes /> </button>
                                 </div>}
                                     <div className="friend-suggestion">
-                                        {/* <div style={{ display: 'flex', justifyContent: "right" }}>
-                                            <button><FaTimes /> </button>
-                                        </div> */}
+                                        <p style={{ color: "#acd4ff", textAlign: "center" }}>Suggested User</p>
                                         <div className="suggested-Friends">
                                             {sugestedUser.map((users, id) => {
                                                 return (
@@ -707,7 +708,7 @@ const Chat = ({ socket }) => {
 
 
                                         <div className="send-chat">
-                                            <textarea type="text" onChange={(e) => setmessages(e.target.value)}></textarea > <button onClick={() => chatWith()}><FaAngleDoubleRight /> </button>
+                                            <textarea type="text" ref={userValue} onChange={(e) => setmessages(e.target.value)} style={{ paddingTop: "10px" }}></textarea > <button onClick={() => chatWith()}><FaAngleDoubleRight /> </button>
                                         </div>
 
                                     </div>}
@@ -778,7 +779,7 @@ const Chat = ({ socket }) => {
                                                         </div>
                                                     </div>
                                                 )) : <div>
-                                                    <p>Currently don't have a friend</p>
+                                                    <p style={{ textAlign: "center", color: "#acd4ff" }}>Currently don't have a friend</p>
                                                 </div>
                                                 }
 

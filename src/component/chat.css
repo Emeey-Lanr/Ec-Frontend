@@ -132,7 +132,7 @@
 .contact-img {
     width: 40px;
     height: 40px;
-    border-radius: 50px;
+    border-radius: 40px;
     border: 3px solid #acd4f7;
     position: relative;
 
@@ -140,7 +140,8 @@
 
 .contact-img img {
     border-radius: 40px;
-    width: 100%;
+    width: 40px;
+    height: 40px;
     object-fit: cover;
 }
 
@@ -312,7 +313,7 @@
     width: 90px;
     height: 90px;
     position: relative;
-    border-radius: 100px;
+    border-radius: 90px;
     border: 3px solid #acd4f7;
 }
 
@@ -325,9 +326,10 @@
 }
 
 .img-square img {
-    width: 100%;
+    width: 90px;
     object-fit: cover;
-    border-radius: 100%;
+    height: 90px;
+    border-radius: 90px;
 }
 
 .about-me {
@@ -437,8 +439,9 @@
 
 .suggested-friend-Img-box img {
     object-fit: cover;
-    width: 100%;
-    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
 }
 
 /* Notification Space */
@@ -656,6 +659,16 @@
 }
 
 @media (max-width:450px) {
+    .chat-nav {
+        position: unset;
+        height: unset;
+    }
+
+    .chat-dark {
+        position: unset;
+        height: unset;
+    }
+
     .chat-icon {
         display: block;
     }
@@ -686,5 +699,78 @@
 
     .delmodal .divmo {
         width: 94%;
+    }
+
+    .chat-space {
+        height: 64vh;
+        padding-bottom: 20px;
+    }
+
+    .profile-side {
+        position: sticky;
+        top: 0;
+    }
+
+    .profile-space {
+        overflow-y: scroll;
+        height: 100vh;
+    }
+
+    .friend-space {
+        padding-bottom: 80px;
+    }
+
+    .friend-suggestion {
+        height: 60vh;
+        padding-bottom: 80px;
+    }
+
+    .notification-space {
+        margin-bottom: 40px;
+    }
+
+
+}
+
+
+
+
+@media (max-height:600px) {
+    .chat-space {
+        height: 56vh;
+    }
+
+    .user {
+        padding-bottom: 80px;
+    }
+
+    .friend-space {
+        padding-bottom: 80px;
+    }
+
+    .friend-suggestion {
+        padding-bottom: 100px;
+    }
+}
+
+@media (max-height:530px) {
+    .chat-space {
+        height: 55vh;
+        padding-bottom: 10px;
+    }
+}
+
+@media screen and (max-height:575px) and (min-height:100px) {
+    .profile-space {
+        overflow-y: scroll;
+        height: 65vh;
+    }
+
+    .user {
+        padding-bottom: 80px;
+    }
+
+    .friend-space {
+        padding-bottom: 80px;
     }
 }

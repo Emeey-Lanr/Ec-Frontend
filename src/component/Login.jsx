@@ -2,7 +2,7 @@ import "./login.css"
 import { useState } from "react"
 import { FaTimes, FaSpinner } from "react-icons/fa"
 import axios from 'axios'
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import Logo from "../component/Logo"
 const Login = ({ socket }) => {
     const [onclick, setonClick] = useState(false)
@@ -83,6 +83,10 @@ const Login = ({ socket }) => {
 
                         <div className="login-btn">
                             <button disabled={onclick} onClick={() => proceed()}>Login{onclick && <FaSpinner className="spin" />}</button>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <p style={{ fontSize: "0.9rem", color: "#acd4ff" }}>Don't have an account?</p>
+                            <Link to="/signup" style={{ color: "#acd4ff", padding: "0 10px" }}>Signup</Link>
                         </div>
 
 
