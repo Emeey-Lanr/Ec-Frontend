@@ -90,6 +90,14 @@
 
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #acd4f7;
+    border-radius: 5px;
+}
 
 
 .user-search {
@@ -534,6 +542,10 @@
     padding: 10px 15px;
     border-radius: 5px;
     color: white;
+}
+
+.friend-space {
+    overflow-x: scroll;
 }
 
 @media(max-width:1000px) {

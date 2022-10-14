@@ -358,7 +358,7 @@ const Chat = ({ socket }) => {
             message: `${userDetails.userName} sent you a friend request`,
             status: false
         }
-        axios.post(addAsFriendEndpoint, { notificationSent: notificationSent, moreinfo: moreinfo, userId: id }).then((result) => {
+        axios.post(addAsFriendEndpoint, { notificationSent: notificationSent, moreinfo: moreinfo, userId: id, userDetails: userDetails.Email }).then((result) => {
             if (result.data.status) {
                 setnumbid(-1)
                 friendInfo()
@@ -375,7 +375,7 @@ const Chat = ({ socket }) => {
     const [deletId, setdeletId] = useState(-1)
     const deleteNotification = (infoname, id) => {
         setdeletId(id)
-        axios.post(deleteEndpoint, { name: infoname }).then((result) => {
+        axios.post(deleteEndpoint, { name: infoname, userDetails: userDetails.Email }).then((result) => {
             if (result.data.status) {
                 getNotification()
                 setdeletId(-1)
@@ -497,7 +497,7 @@ const Chat = ({ socket }) => {
         reader.readAsDataURL(e.target.files[0])
         reader.onload = () => {
             console.log(reader.result)
-            axios.post(ImgUpdate, { imgUrl: reader.result }).then((result) => {
+            axios.post(ImgUpdate, { imgUrl: reader.result, userDetails: userDetails.Email }).then((result) => {
                 if (result.data.status) {
                     userDetailsFunctionOnly()
                     setroll(false)
@@ -534,7 +534,7 @@ const Chat = ({ socket }) => {
     const [password, setPassword] = useState("")
     const deleteAcc = () => {
         setAccept(true)
-        axios.post(delAccEndpoint, { password: password }).then((result) => {
+        axios.post(delAccEndpoint, { password: password, userDetails: userDetails.Email }).then((result) => {
             if (result.data.status) {
                 setDelMessage(result.data.message)
                 localStorage.removeItem("echatUserToken")
@@ -557,7 +557,7 @@ const Chat = ({ socket }) => {
     const aboutMeEndpoint = "https://ec-chat.herokuapp.com/user/aboutMe"
     const updateAboutMeWords = () => {
         setSpinSave(true)
-        axios.post(aboutMeEndpoint, { aboutMe: changeAboutMeWords }).then((result) => {
+        axios.post(aboutMeEndpoint, { aboutMe: changeAboutMeWords, userDetails: userDetails.Email }).then((result) => {
             if (result.data.status) {
                 userDetailsFunctionOnly()
                 setSpinSave(false)
